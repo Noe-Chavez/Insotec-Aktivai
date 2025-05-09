@@ -1,19 +1,20 @@
+# Imagen base con JDK 17
 FROM eclipse-temurin:17-jdk-alpine
 
-# Establecer el directorio de trabajo
+# Instala Maven
+RUN apk add --no-cache maven
+
+# Crea el directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiar el contenido del proyecto
+# Copia todo el contenido del proyecto al contenedor
 COPY . .
 
-# Asegurarse de que mvnw tenga permisos de ejecución
-RUN chmod +x mvnw
+# Ejecuta el build del proyecto sin tests
+RUN mvn clean package -DskipTests
 
-# Construir el proyecto sin ejecutar los tests
-RUN ./mvnw clean package -DskipTests
-
-# Exponer el puerto en el que correrá tu app
+# Expone el puerto donde correrá tu app
 EXPOSE 8080
 
-# Comando para correr el archivo WAR
+# Comando para ejecutar el WAR
 CMD ["java", "-jar", "target/Aktivai-0.0.1-SNAPSHOT.war"]
