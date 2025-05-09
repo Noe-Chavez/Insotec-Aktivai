@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link th:href="@{/css/estilo.css}" rel="stylesheet">
+    <title>Formulario Equipo</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://kit.fontawesome.com/cab137a5a8.js" crossorigin="anonymous"></script>
+    <link th:href="@{/css/estilo.css}" rel="stylesheet">
+</head>
+
+<body>
+    <header th:insert="fragments/nav_bar::nav_bar"></header>
+    <form th:action="@{/equipo/guardar}" method="post" class="espacioSuperior25pixeles row g-3 needs-validation" novalidate>
+		<div class="container">
+            <h1>Datos de Equipo</h1>
+            <div id="categoria" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputIp" class="form-label">Categoria a la que pertenece</label>
+                </div>
+                <div class="col">
+                    <p id="valorCategoria" th:text="${categoria}"></p>
+                </div>
+            </div>
+            <!-- <div id="marca" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputMarca" class="form-label">Marca</label>
+                </div>
+                <div class="col">
+                    <input name="marca" onkeyup="mayus(this);" type="text" id="inputMArca" class="form-control is-valid" aria-describedby="ipMarca" placeholder="EJ. SAMSUNG">
+                    <div class="invalid-feedback">
+                        Ingrese la Marca.
+                    </div>
+                </div>
+            </div>-->
+            <div class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="validationServer01" class="form-label">Marca</label>
+                </div>
+                <div class="col-10">
+                    <select id="SelectMarca" name="marca" class="form-select" required>
+                        <option></option>
+                        <option value="1">Dahua</option>
+                        <option value="2">Hikvision/Epcom/Hiklook</option>
+                    </select>
+                    <div class="invalid-feedback">
+                        Selecciona una Marca.
+                    </div>
+                </div>
+            </div>
+            <div id="ip" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputIp" class="form-label">IP</label>
+                </div>
+                <div class="col">
+                    <input name="Ip" onkeyup="mayus(this);" type="text" id="ip" class="form-control is-valid" aria-describedby="IP" placeholder="EJ. 172.30.4.56">
+                    <div class="invalid-feedback">
+                        Ingrese la IP.
+                    </div>
+                </div>
+            </div>
+            <div id="codigoInstalador" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputCodigoInstalador" class="form-label">Código Instalador</label>
+                </div>
+                <div class="col">
+                    <input name="codigoInstalador" onkeyup="mayus(this);" type="text" id="codigoInstalador" class="form-control is-valid" aria-describedby="CodigoInstalador" placeholder="EJ. 12547KL125">
+                    <div class="invalid-feedback">
+                        Ingrese el código Instalador.
+                    </div>
+                </div>
+            </div>
+			<div id="codigoMaestro" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputCodigoMaestro" class="form-label">Código Maestro</label>
+                </div>
+                <div class="col">
+                    <input name="codigoMaestro" onkeyup="mayus(this);" type="text" id="codigoMaestro" class="form-control is-valid" aria-describedby="CodigoMaestro" placeholder="EJ. 1B5N7KL125">
+                    <div class="invalid-feedback">
+                        Ingrese el código Maestro.
+                    </div>
+                </div>
+            </div>
+			<div id="codigoVerificacion" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputCodigoVerificacion" class="form-label">Código Verificación</label>
+                </div>
+                <div class="col">
+                    <input name="codigoVerificacion" onkeyup="mayus(this);" type="text" id="CodigoVerificación" class="form-control is-valid" aria-describedby="CodigoVerificacion" placeholder="EJ. G2H47KL125">
+                    <div class="invalid-feedback">
+                        Ingrese el código de Verificación.
+                    </div>
+                </div>
+            </div>
+            <div id="esclavo" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputEsclavo" class="form-label">Esclavo</label>
+                </div>
+                <div class="col">
+                    <input name="esclavo" onkeyup="mayus(this);" type="text" id="CodigoEsclavo" class="form-control is-valid" aria-describedby="CodigoEsclavo" placeholder="">
+                    <div class="invalid-feedback">
+                        Ingrese el valor esclavo.
+                    </div>
+                </div>
+            </div>
+            <div id="fechaUltimoMantenimiento" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputFechaUltimoMantenimiento" class="form-label">Última Fecha de Mantenimeinto</label>
+                </div>
+                <div class="col">
+                    <input name="fechaUltimoMantenimiento" onkeyup="mayus(this);" type="datetime" id="fechaUltimoMantenimiento" class="form-control is-valid" aria-describedby="fechaUltimoMantenimiento" placeholder="">
+                    <div class="invalid-feedback">
+                        Seleccione Fecha de Mantenimeinto.
+                    </div>
+                </div>
+            </div>
+            <div id="ipFrenteCalle" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputIpFrenteCalle" class="form-label">IP Frente Calle</label>
+                </div>
+                <div class="col">
+                    <input name="ipFrenteCalle" onkeyup="mayus(this);" type="text" id="ipFrenteCalle" class="form-control is-valid" aria-describedby="ipFrenteCalle" placeholder="EJ. 179.5.12.56">
+                    <div class="invalid-feedback">
+                        Ingrese IP Frente Calle.
+                    </div>
+                </div>
+            </div>
+            <div id="ipMonitorFija" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputIpMonitorFija" class="form-label">IP Monitor Fija</label>
+                </div>
+                <div class="col">
+                    <input name="ipMonitorFija" onkeyup="mayus(this);" type="text" id="inpiTipMonitorFija" class="form-control is-valid" aria-describedby="ipMonitorFija" placeholder="EJ. 180.123.563.19">
+                    <div class="invalid-feedback">
+                        Ingrese la IP Monitor Fija.
+                    </div>
+                </div>
+            </div>
+            <div id="ipPanelCentral" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputIpPanelCentral" class="form-label">IP Panel Central</label>
+                </div>
+                <div class="col">
+                    <input name="ipPanelCentral" onkeyup="mayus(this);" type="text" id="ipPanelCentral" class="form-control is-valid" aria-describedby="ipPanelCentral" placeholder="EJ. 789.36.12.5">
+                    <div class="invalid-feedback">
+                        Ingrese IP Panel Central.
+                    </div>
+                </div>
+            </div>
+            <div id="ipStandalone" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputIpStandalone" class="form-label">IP Standalone</label>
+                </div>
+                <div class="col">
+                    <input name="ipStandalone" onkeyup="mayus(this);" type="text" id="ipStandalone" class="form-control is-valid" aria-describedby="ipStandalone" placeholder="EJ. 173.96.13.12">
+                    <div class="invalid-feedback">
+                        Ingrese la IP Standalone.
+                    </div>
+                </div>
+            </div>
+            <div id="mac" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputMac" class="form-label">MAC</label>
+                </div>
+                <div class="col">
+                    <input name="mac" onkeyup="mayus(this);" type="text" id="mac" class="form-control is-valid" aria-describedby="mac" placeholder="EJ. 00:1B:44:11:3A:B7">
+                    <div class="invalid-feedback">
+                        Ingrese la MAC.
+                    </div>
+                </div>
+            </div>
+            <div id="macComunicador" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputMacComunicador" class="form-label">MAC del comunicador</label>
+                </div>
+                <div class="col">
+                    <input name="macComunicador" onkeyup="mayus(this);" type="text" id="macComunicador" class="form-control is-valid" aria-describedby="macComunicador" placeholder="EJ. 00:1Z:44:21:3C:B7">
+                    <div class="invalid-feedback">
+                        Ingrese la MAC del comunicador.
+                    </div>
+                </div>
+            </div>
+            <div id="maestro" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputMaestro" class="form-label">Maestro</label>
+                </div>
+                <div class="col">
+                    <input name="maestro" onkeyup="mayus(this);" type="text" id="maestro" class="form-control is-valid" aria-describedby="maestro" placeholder="">
+                    <div class="invalid-feedback">
+                        Ingrese el Maestro.
+                    </div>
+                </div>
+            </div>
+            <div id="modelo" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModelo" class="form-label">Modelo</label>
+                </div>
+                <div class="col">
+                    <input name="modelo" onkeyup="mayus(this);" type="text" id="modelo" class="form-control is-valid" aria-describedby="modelo" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo.
+                    </div>
+                </div>
+            </div>
+            <div id="modeloBotonLiberador" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModeloBotonLiberador" class="form-label">Modelo Botón Liberador</label>
+                </div>
+                <div class="col">
+                    <input name="modeloBotonLiberador" onkeyup="mayus(this);" type="text" id="modeloBotonLiberador" class="form-control is-valid" aria-describedby="modeloBotonLiberador" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo del Botón Liberador.
+                    </div>
+                </div>
+            </div>
+            <div id="modeloChapaArea" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModeloChapaArea" class="form-label">Modelo Chapa Área</label>
+                </div>
+                <div class="col">
+                    <input name="modeloChapaArea" onkeyup="mayus(this);" type="text" id="modeloChapaArea" class="form-control is-valid" aria-describedby="modeloChapaArea" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo chapa Área.
+                    </div>
+                </div>
+            </div>
+            <div id="modeloChapaModoAcceso" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModeloChapaModoAcceso" class="form-label">Modelo Chapa Modo Acceso</label>
+                </div>
+                <div class="col">
+                    <input name="modeloChapaModoAcceso" onkeyup="mayus(this);" type="text" id="modeloChapaModoAcceso" class="form-control is-valid" aria-describedby="modeloChapaModoAcceso" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo Chapa Modo Acceso.
+                    </div>
+                </div>
+            </div>
+            <div id="modeloChapaPuerta" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModeloChapaPuerta" class="form-label">Modelo Chapa Puerta</label>
+                </div>
+                <div class="col">
+                    <input name="modeloChapaPuerta" onkeyup="mayus(this);" type="text" id="modeloChapaPuerta" class="form-control is-valid" aria-describedby="modeloChapaPuerta" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo Chapa Puerta.
+                    </div>
+                </div>
+            </div>
+            <div id="modeloComunicador" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModeloComunicador" class="form-label">Modelo Comunicador</label>
+                </div>
+                <div class="col">
+                    <input name="modeloComunicador" onkeyup="mayus(this);" type="text" id="modeloComunicador" class="form-control is-valid" aria-describedby="modeloComunicador" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo Comunicador.
+                    </div>
+                </div>
+            </div>
+            <div id="modeloControlador" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModeloControlador" class="form-label">Modelo Controlador</label>
+                </div>
+                <div class="col">
+                    <input name="modeloControlador" onkeyup="mayus(this);" type="text" id="modeloControlador" class="form-control is-valid" aria-describedby="modeloControlador" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo Controlador.
+                    </div>
+                </div>
+            </div>
+            <div id="inputModeloFrenteCalle" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModeloFrenteCalle" class="form-label">Modelo Frente Calle</label>
+                </div>
+                <div class="col">
+                    <input name="modeloFrenteCalle" onkeyup="mayus(this);" type="text" id="modeloFrenteCalle" class="form-control is-valid" aria-describedby="modeloFrenteCalle" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo Frente Calle.
+                    </div>
+                </div>
+            </div>
+            <div id="modeloLlavero" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModeloLlavero" class="form-label">Modelo LLavero</label>
+                </div>
+                <div class="col">
+                    <input name="modeloLlavero" onkeyup="mayus(this);" type="text" id="modeloLlavero" class="form-control is-valid" aria-describedby="modeloLlavero" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo LLavero.
+                    </div>
+                </div>
+            </div>
+            <div id="modeloMonitor" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModeloMonitor" class="form-label">Modelo Monitor</label>
+                </div>
+                <div class="col">
+                    <input name="modeloMonitor" onkeyup="mayus(this);" type="text" id="modeloMonitor" class="form-control is-valid" aria-describedby="modeloMonitor" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo Monitor.
+                    </div>
+                </div>
+            </div>
+            <div id="modeloPanel" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModeloPanel" class="form-label">Modelo Panel</label>
+                </div>
+                <div class="col">
+                    <input name="modeloPanel" onkeyup="mayus(this);" type="text" id="modeloPanel" class="form-control is-valid" aria-describedby="modeloPanel" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo Panel.
+                    </div>
+                </div>
+            </div>
+            <div id="modeloPanelCentral" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModeloPanelCentral" class="form-label">Modelo Panel Central</label>
+                </div>
+                <div class="col">
+                    <input name="modeloPanelCentral" onkeyup="mayus(this);" type="text" id="modeloPanelCentral" class="form-control is-valid" aria-describedby="modeloPanelCentral" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo Panel Central.
+                    </div>
+                </div>
+            </div>
+            <div id="inputModeloPuntoAcceso" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModeloPuntoAcceso" class="form-label">Modelo Punto de Acceso</label>
+                </div>
+                <div class="col">
+                    <input name="modeloPuntoAcceso" onkeyup="mayus(this);" type="text" id="modeloPuntoAcceso" class="form-control is-valid" aria-describedby="modeloPuntoAcceso" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo Punto de Acceso.
+                    </div>
+                </div>
+            </div>
+            <div id="modeloSirenas" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModeloSirenas" class="form-label">Modelo de Sirenas</label>
+                </div>
+                <div class="col">
+                    <input name="modeloSirenas" onkeyup="mayus(this);" type="text" id="modeloSirenas" class="form-control is-valid" aria-describedby="modeloSirenas" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo de Sirenas.
+                    </div>
+                </div>
+            </div>
+            <div id="modeloTeclado" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputModeloTeclado" class="form-label">Modelo del Teclado</label>
+                </div>
+                <div class="col">
+                    <input name="modeloTeclado" onkeyup="mayus(this);" type="text" id="modeloTeclado" class="form-control is-valid" aria-describedby="modeloTeclado" placeholder="EJ. KOPL-965-63KP">
+                    <div class="invalid-feedback">
+                        Ingrese el Modelo del Teclado.
+                    </div>
+                </div>
+            </div>
+            <div class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="validationServer01" class="form-label">Notas</label>
+                </div>
+                <div class="col-10">
+                    <textarea onkeyup="mayus(this);" name="notas" class="form-control is-valid textareaNoRedimencion" id="notas" rows="8" placeholder="INGRESE NOTAS ADICIONALES EN CASO DE SER NECESARIO"></textarea>
+                    <div class="invalid-feedback">
+                        Ingrese notas adicionales.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroCamara" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroCamaras" class="form-label">Número de Cámaras</label>
+                </div>
+                <div class="col">
+                    <input name="numeroCamara" onkeyup="mayus(this);" type="number" id="numeroCamara" class="form-control is-valid" aria-describedby="numeroCamara" placeholder="EJ. 5">
+                    <div class="invalid-feedback">
+                        Ingrese el Número de Cámaras.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroDepartamento" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroDepartamento" class="form-label">Número de Departamentos</label>
+                </div>
+                <div class="col">
+                    <input name="numeroDepartamento" onkeyup="mayus(this);" type="number" id="numeroDepartamento" class="form-control is-valid" aria-describedby="numeroDepartamento" placeholder="EJ. 2">
+                    <div class="invalid-feedback">
+                        Ingrese el Número de Departamentos.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroLlaveros" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroLlaveros" class="form-label">Número Llaveros</label>
+                </div>
+                <div class="col">
+                    <input name="numeroLlaveros" onkeyup="mayus(this);" type="number" id="numeroLlaveros" class="form-control is-valid" aria-describedby="numeroLlaveros" placeholder="EJ. 3">
+                    <div class="invalid-feedback">
+                        Ingrese el Número Llaveros.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroMonitores" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroMonitores" class="form-label">Número Monitores</label>
+                </div>
+                <div class="col">
+                    <input name="numeroMonitores" onkeyup="mayus(this);" type="number" id="numeroMonitores" class="form-control is-valid" aria-describedby="numeroMonitores" placeholder="EJ. 3">
+                    <div class="invalid-feedback">
+                        Ingrese el Número Monitores.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroPanel" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroPanel" class="form-label">Número de Panel</label>
+                </div>
+                <div class="col">
+                    <input name="numeroPanel" onkeyup="mayus(this);" type="text" id="numeroPanel" class="form-control is-valid" aria-describedby="numeroPanel" placeholder="EJ. 3">
+                    <div class="invalid-feedback">
+                        Ingrese el Número de Panel.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroPanelStandalone" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroPanelStandalone" class="form-label">Número de Panel Standalone</label>
+                </div>
+                <div class="col">
+                    <input name="numeroPanelStandalone" onkeyup="mayus(this);" type="number" id="numeroPanel" class="form-control is-valid" aria-describedby="numeroPanel" placeholder="EJ. 3">
+                    <div class="invalid-feedback">
+                        Ingrese el Número de Panel Standalone.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroPuertosPanel" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroPanelPuertos" class="form-label">Número Puertos Panel</label>
+                </div>
+                <div class="col">
+                    <input name="numeroPuertosPanel" onkeyup="mayus(this);" type="number" id="numeroPuertosPanel" class="form-control is-valid" aria-describedby="numeroPuertosPanel" placeholder="EJ. 3">
+                    <div class="invalid-feedback">
+                        Ingrese el Número Puertos Panel.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroPuntosAccesoInstalador" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroPuertosAccesoInstalador" class="form-label">Número Puertos Acceso Instalador</label>
+                </div>
+                <div class="col">
+                    <input name="numeroPuntosAccesoInstalador" onkeyup="mayus(this);" type="number" id="numeroPuntosAccesoInstalador" class="form-control is-valid" aria-describedby="numeroPuntosAccesoInstalador" placeholder="EJ. 3">
+                    <div class="invalid-feedback">
+                        Ingrese el Número Puertos Acceso Instalador.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroSensoresTotal" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroSensoresTotal" class="form-label">Número Sensores Total</label>
+                </div>
+                <div class="col">
+                    <input name="numeroSensoresTotal" onkeyup="mayus(this);" type="number" id="numeroSensoresTotal" class="form-control is-valid" aria-describedby="numeroSensoresTotal" placeholder="EJ. 25">
+                    <div class="invalid-feedback">
+                        Ingrese el Número Sensores Total.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroSerie" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroSerie" class="form-label">Número de Serie</label>
+                </div>
+                <div class="col">
+                    <input name="numeroSerie" onkeyup="mayus(this);" type="text" id="numeroSerie" class="form-control is-valid" aria-describedby="numeroSerie" placeholder="EJ. 25">
+                    <div class="invalid-feedback">
+                        Ingrese el Número de Serie.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroSerieMonitor" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroSerieMonitor" class="form-label">Número de Serie del Monitor</label>
+                </div>
+                <div class="col">
+                    <input name="numeroSerieMonitor" onkeyup="mayus(this);" type="text" id="numeroSerieMonitor" class="form-control is-valid" aria-describedby="numeroSerieMonitor" placeholder="EJ. 4564564564556">
+                    <div class="invalid-feedback">
+                        Ingrese el Número de Serie del Monitor.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroSeriePanel" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroSeriePanel" class="form-label">Número de Serie del Panel</label>
+                </div>
+                <div class="col">
+                    <input name="numeroSeriePanel" onkeyup="mayus(this);" type="text" id="numeroSeriePanel" class="form-control is-valid" aria-describedby="numeroSeriePanel" placeholder="EJ. 4564564564556">
+                    <div class="invalid-feedback">
+                        Ingrese el Número de Serie del Panel.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroSeriePanelStandalone" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroSeriePanelStandalone" class="form-label">Número de Serie del Panel Standalone</label>
+                </div>
+                <div class="col">
+                    <input name="numeroSeriePanelStandalone" onkeyup="mayus(this);" type="text" id="numeroSeriePanelStandalone" class="form-control is-valid" aria-describedby="numeroSeriePanelStandalone" placeholder="EJ. 4564564564556">
+                    <div class="invalid-feedback">
+                        Ingrese el Número de Serie del Panel Standalone.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroSerieSensorCableado" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroSerieSensorCableado" class="form-label">Número de Serie Sensor Cableado</label>
+                </div>
+                <div class="col">
+                    <input name="numeroSerieSensorCableado" onkeyup="mayus(this);" type="text" id="numeroSerieSensorCableado" class="form-control is-valid" aria-describedby="numeroSerieSensorCableado" placeholder="EJ. 4564564564556">
+                    <div class="invalid-feedback">
+                        Ingrese el Número de Serie Sensor Cableado.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroSerieSensorInalambrico" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroSerieSensorInalambrico" class="form-label">Número de Serie del Sensor Inalámbrico</label>
+                </div>
+                <div class="col">
+                    <input name="numeroSerieSensorInalambrico" onkeyup="mayus(this);" type="text" id="numeroSerieSensorInalambrico" class="form-control is-valid" aria-describedby="numeroSerieSensorInalambrico" placeholder="EJ. 4564564564556">
+                    <div class="invalid-feedback">
+                        Ingrese el Número de Serie del Sensor Inalámbrico.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroSirenas" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroSirenas" class="form-label">Número de Sirenas</label>
+                </div>
+                <div class="col">
+                    <input name="numeroSirenas" onkeyup="mayus(this);" type="number" id="numeroSirenas" class="form-control is-valid" aria-describedby="numeroSirenas" placeholder="EJ. 4">
+                    <div class="invalid-feedback">
+                        Ingrese el Número de Sirenas.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroTeclados" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroTeclados" class="form-label">Número de Teclados</label>
+                </div>
+                <div class="col">
+                    <input name="numeroTeclados" onkeyup="mayus(this);" type="number" id="numeroTeclados" class="form-control is-valid" aria-describedby="numeroTeclados" placeholder="EJ. 4">
+                    <div class="invalid-feedback">
+                        Ingrese el Número de Teclados.
+                    </div>
+                </div>
+            </div>
+            <!--<div id="numeroZonaCableadas" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroZonaClableadas" class="form-label">Número Zonas Cableadas</label>
+                </div>
+                <div class="col">
+                    <input name="numeroZonaCableadas" onkeyup="mayus(this);" type="number" id="numeroZonaCableadas" class="form-control is-valid" aria-describedby="numeroZonaCableadas" placeholder="EJ. 4">
+                    <div class="invalid-feedback">
+                        Ingrese el Número Zonas Cableadas.
+                    </div>
+                </div>
+            </div>-->
+            <div id="numeroZonaInalambricas" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroZonasInalambricas" class="form-label">Número Zonas Inalámbricas</label>
+                </div>
+                <div class="col">
+                    <input name="numeroZonaInalambricas" onkeyup="mayus(this);" type="number" id="numeroZonaInalambricas" class="form-control is-valid" aria-describedby="numeroZonaInalambricas" placeholder="EJ. 4">
+                    <div class="invalid-feedback">
+                        Ingrese el Número Zonas Inalámbricas.
+                    </div>
+                </div>
+            </div>
+            <div id="numeroZonaCableadas" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputNumeroZonasCableadas" class="form-label">Número Zonas Cableadas</label>
+                </div>
+                <div class="col">
+                    <input name="numeroZonaCableadas" onkeyup="mayus(this);" type="number" id="numeroZonaCableadas" class="form-control is-valid" aria-describedby="numeroZonaCableadas" placeholder="EJ. 4">
+                    <div class="invalid-feedback">
+                        Ingrese el Número Zonas Cableadas.
+                    </div>
+                </div>
+            </div>
+            <div id="serieComunicador" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputSerieComunicador" class="form-label">Número de Serie Comunicador</label>
+                </div>
+                <div class="col">
+                    <input name="serieComunicador" onkeyup="mayus(this);" type="number" id="serieComunicador" class="form-control is-valid" aria-describedby="serieComunicador" placeholder="EJ. 4">
+                    <div class="invalid-feedback">
+                        Ingrese de Serie Comunicador.
+                    </div>
+                </div>
+            </div>
+            <div id="serieDvr" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputSerieDVR" class="form-label">Número de Serie DVR</label>
+                </div>
+                <div class="col">
+                    <input name="serieDvr" onkeyup="mayus(this);" type="text" id="serieDvr" class="form-control is-valid" aria-describedby="serieDvr" placeholder="EJ. 4">
+                    <div class="invalid-feedback">
+                        Ingrese de Serie DVR.
+                    </div>
+                </div>
+            </div>
+            <div id="serieFrenteCalle" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputSerieFrenteCalle" class="form-label">Número de Serie Frente Calle</label>
+                </div>
+                <div class="col">
+                    <input name="serieFrenteCalle" onkeyup="mayus(this);" type="text" id="serieFrenteCalle" class="form-control is-valid" aria-describedby="serieFrenteCalle" placeholder="EJ. 4">
+                    <div class="invalid-feedback">
+                        Ingrese de Serie Frente Calle.
+                    </div>
+                </div>
+            </div>
+            <div id="serieP2p" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputSerieP2P" class="form-label">Número de Serie P2P</label>
+                </div>
+                <div class="col">
+                    <input name="serieP2p" onkeyup="mayus(this);" type="text" id="serieP2p" class="form-control is-valid" aria-describedby="serieP2p" placeholder="EJ. 4">
+                    <div class="invalid-feedback">
+                        Ingrese de Serie P2P.
+                    </div>
+                </div>
+            </div>
+            <div id="tipoSensorCableado" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputTipoSensorCableado" class="form-label">Número el Tipo Sensor Cableado</label>
+                </div>
+                <div class="col">
+                    <input name="tipoSensorCableado" onkeyup="mayus(this);" type="text" id="tipoSensorCableado" class="form-control is-valid" aria-describedby="tipoSensorCableado" placeholder="EJ. 4">
+                    <div class="invalid-feedback">
+                        Ingrese el Tipo Sensor Cableado.
+                    </div>
+                </div>
+            </div>
+            <div id="tipoSensorInalambrico" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputTipoSensorInalambrico" class="form-label">Número el Tipo Sensor Inalámbrico</label>
+                </div>
+                <div class="col">
+                    <input name="tipoSensorInalambrico" onkeyup="mayus(this);" type="text" id="inputtipoSensorInalambrico" class="form-control is-valid" aria-describedby="tipoSensorInalambrico" placeholder="EJ. 4">
+                    <div class="invalid-feedback">
+                        Ingrese el Tipo Sensor Inalámbrico.
+                    </div>
+                </div>
+            </div>
+            <div id="versionFireware" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputVersionFireware" class="form-label">Número la Versión del Fireware</label>
+                </div>
+                <div class="col">
+                    <input name="versionFireware" onkeyup="mayus(this);" type="text" id="versionFireware" class="form-control is-valid" aria-describedby="versionFireware" placeholder="EJ. 4">
+                    <div class="invalid-feedback">
+                        Ingrese la Versión del Fireware.
+                    </div>
+                </div>
+            </div>
+            <div id="zonaCuidarCableado" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputZonaCuidarCableado" class="form-label">Número la Zona Cuidar Cableado</label>
+                </div>
+                <div class="col">
+                    <input name="zonaCuidarCableado" onkeyup="mayus(this);" type="text" id="zonaCuidarCableado" class="form-control is-valid" aria-describedby="zonaCuidarCableado" placeholder="EJ. 4">
+                    <div class="invalid-feedback">
+                        Ingrese la Zona Cuidar Cableado.
+                    </div>
+                </div>
+            </div>
+            <div id="zonaCuidarInalambrico" class="row espacioSuperior25pixeles">
+                <div class="col-2">
+                    <label for="inputZonaCuidarInalambrico" class="form-label">Número la Zona Cuidar Inalámbrico</label>
+                </div>
+                <div class="col">
+                    <input name="zonaCuidarInalambrico" onkeyup="mayus(this);" type="text" id="zonaCuidarInalambrico" class="form-control is-valid" aria-describedby="zonaCuidarInalambrico" placeholder="EJ. 4">
+                    <div class="invalid-feedback">
+                        Ingrese la Zona Cuidar Inalámbrico.
+                    </div>
+                </div>
+            </div>
+            <div class="row espacioSuperior25pixeles"> 
+                <div class="col-8"></div>  
+                <div class="col-4">
+                    <a type="button" href="/home.html" id="btn-Registrar" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" id="btn-cancelar" class="btn text-white" style="background-color:  #283968 ;">Guardar</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <footer th:insert="fragments/footer::footer" class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top"></footer>
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <!-- <script th:src="@{/javascript/Scripts.js}"></script> -->
+    <script th:src="@{/javascript/Equipos.js}"></script>
+   
+    <script th:inline="javascript">
+		function agregarFila() {
+			var contendor  = $("#lista-equipos").html();
+			var nuevaFila = '<tr>';
+				nuevaFila += '<td><input type="text" id="inputMarca" class="form-control" aria-describedby="marcaEquipo"></td>';
+				nuevaFila += '<td><input type="text" id="inputNumSerie" class="form-control" aria-describedby="serieEquipo"></td>';
+				nuevaFila += '<td><input type="text" id="inputModelo" class="form-control" aria-describedby="modeloEquipo"></td>';
+				nuevaFila += '<td><input type="text" id="inputIpFija" class="form-control" aria-describedby="IpEquipo"></td>';            
+				nuevaFila += '<td class="text-center">';
+				nuevaFila += '<a title="Agregar equipo" type="button" class="btn btn-secondary rounded-circle" onclick="agregarFila()">';
+				nuevaFila += '<i class="fa-sharp fa-solid fa-plus fa-2x text-white" ></i>';
+				nuevaFila += '</a>';
+				nuevaFila += '</td>';
+				nuevaFila += '</tr>';
+		$("#lista-equipos").html(contendor+nuevaFila);
+		}
+	</script>
+
+</body>
+
+</html>

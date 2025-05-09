@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <head>
+        <meta charset="UTF-8">
+        <!-- CSS only -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+        <title>Cartera de Clientes</title>
+        <link th:href="@{/css/estilo.css}" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/cab137a5a8.js" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <header th:insert="fragments/nav_bar::nav_bar"></header>
+        <div class="container">
+            <h1>CARTERA DE CLIENTES</h1>
+            <div id="search-box">
+                <form class="d-flex needs-validation" novalidate role="search" th:action="@{/usuario/buscarEnCarteClientes}">
+                    <input id="palabraClave" onkeyup="mayus(this);" class="form-control me-2 is-valid" type="search" name="palabraClave" placeholder="Buscar por nombre, apellido materno o paterno" th:value="${palabraClave}" aria-label="Buscar" required>
+                    <button class="btn btn-secondary" type="submit">
+                    	<i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
+                </form>
+            </div>
+            <br>
+            <div>
+                <a id="button_create" th:href="@{/usuario/carteraClientes/formularioClientes}" type="button" class="btn text-white" style="background-color: #17385f;">
+                    + Nuevo Cliente
+                </a>
+            </div>
+            <div th:if="${msg != null}" class="alert alert-success" th:text="${msg}" role="alert"></div>
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="bg-danger text-white">
+                <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Teléfono</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Estatus</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="cliente:${clientes}">
+                        <td class="idUsuarioTabla">
+                            <span th:if="${cliente.tipoDePersona == 1}">
+                                <p th:text="${cliente.nombre} + ' ' + ${cliente.paterno}"></p>
+                            </span>
+                            <span th:unless="${cliente.tipoDePersona == 1}">
+                                <p th:text="${cliente.nombre}"></p>
+                            </span>
+                        </td>
+                        <td th:text="${cliente.telPersonal}"></td>
+                        <td th:text="${cliente.mail}"></td> 
+                        <td th:text="${cliente.tipoDePersona == 1}?'Particular':'Empresarial'"></td>
+                        <td align="center">
+                            <span th:if="${cliente.habilitado}">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="indicadorActivoGreen" width="25" height="25" fill="currentColor" class="bi bi-circle-fill" viewBox="0 0 16 16">
+                                    <circle cx="8" cy="8" r="8"/>
+                                </svg>    
+                            </span>
+                            <span th:unless="${cliente.habilitado}">
+                                <svg xmlns="http://www.w3.org/2000/svg" id="indicadorInactivoRed" width="25" height="25" fill="currentColor" class="bi bi-circle-fill" viewBox="0 0 16 16">
+                                    <circle cx="8" cy="8" r="8"/>
+                                </svg>
+                            </span>
+                        </td>
+                        <td>
+                            <a type="button" data-bs-toggle="modal" th:attr="data-bs-target='#detallesClienteModal'+*{cliente.id}" >
+                                <i class="fa-solid fa-eye fa-2x text-secondary"></i>&nbsp;
+                            </a>
+                            <!-- Modal Detalles de Cliente -->
+                            <div class="modal fade" data-bs-backdrop="static" th:id="*{'detallesClienteModal'+{cliente.id}}" tabindex="-1" aria-labelledby="detallesClienteModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                    <div class="modal-header text-white" style="background-color: #17385f;">
+                                    <h1 class="modal-title fs-5" id="detallesClienteModalLabel">Detalles del Cliente</h1>
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container">
+                                            <div class="row">
+                                                <h4 align="center" class="fs-5" th:text="'Nombre: ' + ${cliente.nombre} + ' ' + ${cliente.paterno} + ' ' + ${cliente.materno}"></h4>
+                                                <hr>
+                                                <!-- Pesona física -->
+                                                <span th:if="${cliente.tipoDePersona == 1}">
+                                                    <p class="card-text" th:text="'Teléfono Personal: ' + ${cliente.telPersonal}">Teléfono Personal</p>
+                                                    <p class="card-text" th:text="'Teléfono Oficina: ' + ${cliente.telOficina}">Teléfono Oficina</p>
+                                                    <p class="card-text" th:text="'Correo electrónico: ' + ${cliente.mail}">Correo electrónico</p>
+                                                    <p class="card-text" th:text="'Fecha de Creación: ' + ${#dates.format(cliente.fechaCreacion, 'dd/MM/yyyy - HH:mm')}"></p>
+                                                    <p class="card-text" th:text="${cliente.habilitado}?'Estatus: Activo':' Estatus: Inactivo'">estatus</p>
+                                                    <p class="card-text" th:text="'Comentarios: ' + ${cliente.comentarios}">Comentarios</p>
+                                                </span>
+                                                <!-- Pesona moral -->
+                                                <span th:unless="${cliente.tipoDePersona == 1}">
+                                                    <p class="card-text" th:text="'RFC: ' + ${cliente.rfc}">RFC</p>
+                                                    <p class="card-text" th:text="'Contacto: ' + ${cliente.contacto}">Contacto</p>
+                                                    <p class="card-text" th:text="'Teléfono Personal: ' + ${cliente.telPersonal}">Teléfono Personal</p>
+                                                    <p class="card-text" th:text="'Teléfono Oficina: ' + ${cliente.telOficina}">Teléfono Oficina</p>
+                                                    <p class="card-text" th:text="'Correo electrónico: ' + ${cliente.mail}">Correo electrónico</p>
+                                                    <p class="card-text" th:text="'Fecha de Creación: ' + ${#dates.format(cliente.fechaCreacion, 'dd/MM/yyyy - HH:mm')}"></p>
+                                                    <p class="card-text" th:text="${cliente.habilitado}?'Estatus: Activo':' Estatus: Inactivo'">estatus</p>
+                                                    <p class="card-text" th:text="'Comentarios: ' + ${cliente.comentarios}">Comentarios</p>
+                                                </span>
+                                            </div>
+                                            <hr>
+                                            <div class="row">
+                                                <div class="col-4"></div>
+                                                <div class="col-4">   
+                                                    <a type="button" th:href="@{/sucursales/tablaSucursales/{idUsuario} (idUsuario=${cliente.id})}" class="btn btn-primary btn-lg" style="background-color: #17385f;">Sucursales</a>
+                                                </div>
+                                                <div class="col-4"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a type="button" data-bs-toggle="modal" th:attr="data-bs-target='#editarClienteModal'+*{cliente.id}" >
+                                <i class="fa-solid fa-pen-to-square fa-2x text-secondary"></i>&nbsp;
+                            </a>
+                            <!-- Modal Modificar clientes -->
+                            <form th:action="@{/usuario/actualizarCliente}" method="post" class="row g-3 needs-validation" novalidate> 
+                                <div class="modal fade" data-bs-backdrop="static" th:id="*{'editarClienteModal'+{cliente.id}}" tabindex="-1" aria-labelledby="editarClienteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-xl">
+                                    <div class="modal-content">
+                                    <div class="modal-header text-white" style="background-color: #17385f;">
+                                        <h1 class="modal-title fs-5" id="editarClienteModalLabel">Modificar Cliente</h1>
+                                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container">
+                                            <div class="row espacioSuperior25pixeles" style="display:none">
+                                                <div class="col-2">
+                                                    <label class="form-label">Id Cliente</label>
+                                                </div>
+                                                <div class="col-10">
+                                                    <input type="number" th:value="${cliente.id}" name="id">
+                                                </div>
+                                            </div>
+                                            <div class="row espacioSuperior25pixeles" style="display:none">
+                                                <div class="col-2">
+                                                    <label class="form-label">Password</label>
+                                                </div>
+                                                <div class="col-10">
+                                                    <input type="password"  th:value="${cliente.password}" name="password">
+                                                </div>
+                                            </div>
+                                            <!-- Persona Física -->
+                                            <spam th:if="${cliente.tipoDePersona == 1}">
+                                                <div class="row espacioSuperior25pixeles" style="display:none">
+                                                    <div class="col-2">
+                                                        <label for="validationServer01" class="form-label">Tipo de Cliente</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <select id="SelectTipoPersona" name="tipoDePersona" class="form-select" required>
+                                                            <option></option>
+                                                            <option value="1" selected>PERSONA FÍSICA</option>
+                                                            <option value="2">PERSONA MORAL</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">
+                                                            Campo Obligatorio
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row espacioSuperior25pixeles">
+                                                    <div class="col-2">
+                                                        <label class="form-label">Nombres</label>
+                                                    </div>
+                                                    <div class="col-10 espacioInferior25pixeles">
+                                                        <input type="text" onkeyup="mayus(this);" th:value="${cliente.nombre}" class="form-control" id="inputNombreCliente" required>
+                                                        <div id="nombresHelp" class="form-text"></div>    
+                                                        <div class="invalid-feedback">
+                                                            Campo Obligatorio.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row espacioInferior25pixeles">
+                                                    <div class="col-2">
+                                                        <label class="form-label">Apellido Paterno</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <input type="text" onkeyup="mayus(this);" th:value="${cliente.paterno}" name="paterno" class="form-control" id="inputPaternoCliente" required>
+                                                        <div id="paternoHelp" class="form-text"></div>
+                                                        <div class="invalid-feedback">
+                                                            Campo Obligatorio.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row espacioInferior25pixeles">
+                                                    <div class="col-2">
+                                                        <label class="form-label">Apellido Materno</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <input type="text" onkeyup="mayus(this);" th:value="${cliente.materno}" name="materno" class="form-control" id="inputMaternoCliente">
+                                                        <div id="maternoHelp" class="form-text"></div>
+                                                    </div>
+                                                    <div class="invalid-feedback">
+                                                        Campo Obligatorio.
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-2">
+                                                        <label class="form-label">Correo Electrónico</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <div class="input-group has-validation">
+                                                            <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                                            <input type="email" onkeyup="mayus(this);" th:value="${cliente.mail}" name="mail" class="form-control" id="inputEmail" aria-describedby="emailCliente" required>
+                                                            <div class="invalid-feedback">
+                                                                Campo Obligatorio.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="invalid-feedback">
+                                                        Campo Obligatorio.
+                                                    </div>
+                                                </div>
+                                                <div class="row espacioSuperior25pixeles">
+                                                    <div class="col-2">
+                                                        <label for="validationServer01" class="form-label">Teléfono Personal</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <input type="number" onkeyup="mayus(this);" th:value="${cliente.telPersonal}" name="telPersonal" aria-describedby="name" class="form-control is-valid" id="inputTelPersonCliente" required>
+                                                        <div class="invalid-feedback">
+                                                            Campo Obligatorio.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row espacioSuperior25pixeles">
+                                                    <div class="col-2">
+                                                        <label class="form-label">Teléfono de Oficina</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <input id="inputTelOficinaUsuario" type="text" onkeyup="mayus(this);" th:value="${cliente.telOficina}" name="telOficina" class="form-control">
+                                                        <div id="telOficinaHelp" class="form-text"></div>
+                                                        <div class="invalid-feedback">
+                                                            Campo Obligatorio.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row espacioSuperior25pixeles">
+                                                    <div class="col-2">
+                                                        <label class="form-label">Comentarios</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <textarea id="comentariosUsuario" th:text="${cliente.comentarios}" name="comentarios" rows="8" onkeyup="mayus(this);" class="form-control textareaNoRedimencion"></textarea>
+                                                        <div id="comentariosHelp" class="form-text"></div>
+                                                        <div class="invalid-feedback">
+                                                            Campo Obligatorio.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </spam>
+                                            <!-- Persona Moral -->
+                                            <spam th:unless="${cliente.tipoDePersona == 1}">
+                                                <div class="row espacioSuperior25pixeles">
+                                                    <div class="col-2">
+                                                        <label for="validationServer01" class="form-label">Tipo de Cliente</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <select id="SelectTipoPersona" name="tipoDePersona" class="form-select" required>
+                                                            <option></option>
+                                                            <option value="1">PERSONA FÍSICA</option>
+                                                            <option value="2" selected>PERSONA MORAL</option>
+                                                        </select>
+                                                        <div class="invalid-feedback">
+                                                            Campo Obligatorio
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row espacioSuperior25pixeles">
+                                                    <div class="col-2">
+                                                        <label class="form-label">Nombre de Empresa/Negocio</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <input type="text" onkeyup="mayus(this);" th:value="${cliente.nombre}" name="nombre" class="form-control" id="inputNombreCliente" required>
+                                                        <div id="nombresHelp" class="form-text"></div>    
+                                                        <div class="invalid-feedback">
+                                                            Campo Obligatorio.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row espacioSuperior25pixeles">
+                                                    <div class="col-2">
+                                                        <label class="form-label">Contacto</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <input type="text" onkeyup="mayus(this);" th:value="${cliente.contacto}" name="contacto" class="form-control" id="inputContactoUsuario" required>
+                                                        <div id="contactoHelp" class="form-text"></div>    
+                                                        <div class="invalid-feedback">
+                                                            Campo Obligatorio.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row espacioSuperior25pixeles">
+                                                    <div class="col-2">
+                                                        <label for="validationServer01" class="form-label">Teléfono Personal</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <input type="number" onkeyup="mayus(this);" th:value="${cliente.telPersonal}" name="telPersonal" aria-describedby="name" class="form-control is-valid" id="inputTelPersonCliente" required>
+                                                        <div class="invalid-feedback">
+                                                            Campo Obligatorio.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row espacioSuperior25pixeles">
+                                                    <div class="col-2">
+                                                        <label class="form-label">Correo Electrónico</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <div class="input-group has-validation">
+                                                            <span class="input-group-text" id="inputGroupPrepend">@</span>
+                                                            <input type="email" onkeyup="mayus(this);" th:value="${cliente.mail}" name="mail" class="form-control" id="inputEmail" aria-describedby="emailCliente" required>
+                                                            <div class="invalid-feedback">
+                                                                Campo Obligatorio.
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="invalid-feedback">
+                                                        Campo Obligatorio.
+                                                    </div>
+                                                </div>
+                                                <div class="row espacioSuperior25pixeles">
+                                                    <div class="col-2">
+                                                        <label class="form-label">Teléfono de Oficina</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <input id="inputTelOficinaUsuario" type="text" onkeyup="mayus(this);" th:value="${cliente.telOficina}" name="telOficina" class="form-control">
+                                                        <div id="telOficinaHelp" class="form-text"></div>
+                                                        <div class="invalid-feedback">
+                                                            Campo Obligatorio.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row espacioSuperior25pixeles">
+                                                    <div class="col-2">
+                                                        <label class="form-label">RFC</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <input type="text" onkeyup="mayus(this);" th:value="${cliente.rfc}" name="rfc" class="form-control" id="inputRfc">
+                                                        <div id="rfcHelp" class="form-text"></div>
+                                                        <div class="invalid-feedback">
+                                                            Campo Obligatorio.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row espacioSuperior25pixeles">
+                                                    <div class="col-2">
+                                                        <label class="form-label">Comentarios</label>
+                                                    </div>
+                                                    <div class="col-10">
+                                                        <textarea id="comentariosUsuario" th:text="${cliente.comentarios}" name="comentarios" rows="8" onkeyup="mayus(this);" class="form-control textareaNoRedimencion"></textarea>
+                                                        <div id="comentariosHelp" class="form-text"></div>
+                                                        <div class="invalid-feedback">
+                                                            Campo Obligatorio.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </spam> 
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+                                        <button type="submit" class="btn text-white" style="background-color: #17385f;">Guardar</button>
+                                    </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>    
+            </table>
+            <nav th:if="${totalPages > 0}" aria-label="Page navigation example" >
+                <ul class="pagination text-secondary">
+                <li class="page-item text-secondary"><a th:href="@{/usuario/tablaUsuariosPaginada (page=${usuarios.number - 1})}" class="page-link text-secondary">Anterior</a></li>
+                <li class="page-item text-secondary"><a th:href="@{/usuario/tablaUsuariosPaginada (page=${usuarios.number + 1})}" class="page-link text-secondary">Siguiente</a></li>
+                </ul>
+            </nav>
+        </div>
+
+        <footer th:insert="fragments/footer::footer" class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top"></footer>
+ 
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script> 
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+ 
+        <!-- JavaScript Bundle with Popper -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+        <!-- JavaScript para el funcionamiento del modal de detalles de usuario -->
+        <script th:src="@{/javascript/Scripts.js}"></script>
+        <script th:src="@{/javascript/ScriptValidaciones.js}"></script>
+        <script th:src="@{/javascript/ScriptActualizacionCliente.js}"></script>
+    </body>
+</html>

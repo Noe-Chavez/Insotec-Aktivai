@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx"
+      crossorigin="anonymous" />
+    <title>Sucursales</title>
+    <link th:href="@{/css/estilo.css}" rel="stylesheet" />
+</head>
+<body>
+
+    <header th:insert="fragments/nav_bar::nav_bar"></header>
+
+    <div class="container">
+        <h1>Sucursales</h1>
+        <div id="search-box">
+            <form class="d-flex needs-validation" novalidate role="search" th:action="@{/sucursales/buscarSucursalPorNombre}">
+                <input id="palabraClave" onkeyup="mayus(this);" class="form-control me-2 is-valid" type="search" name="palabraClave" placeholder="Buscar" th:value="${palabraClave}" aria-label="Buscar" required>
+                <button class="btn btn-secondary" type="submit">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+        </div>
+        <br>
+        <div>
+            <a id="button_create" th:href="@{/sucursales/crear}" type="button" class="btn text-white" style="background-color: #17385f;">
+                + Nueva Sucursal
+            </a>
+        </div>
+        <div th:if="${msg != null}" class="alert alert-success" th:text="${msg}" role="alert"></div>
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="bg-danger text-white">
+            <tr>
+                <th scope="col">Nombre de la Sucursal</th>
+                <th scope="col">Contacto de Sucursal</th>
+                <th scope="col">Telefono de Sucursal</th>
+                <th scope="col">Correo Electrónico</th>
+                <th scope="col">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each=" sucursal : ${sucursales}">
+                <td th:text="${sucursal.nombre}"></td>
+                <td th:text="${sucursal.contacto}"></td>
+                <td th:text="${sucursal.telefono}"></td> 
+                <td th:text="${sucursal.correo}"></td>
+                <td>
+                    <a type="button" data-bs-toggle="modal" th:attr="data-bs-target='#detallesSucursalModal'+*{sucursal.idSucursal}" >
+                        <i class="fa-solid fa-eye fa-2x text-secondary"></i>&nbsp;
+                    </a>
+                    <!-- Modal Detalles de Sucursal -->
+                    <div class="modal fade" data-bs-backdrop="static" th:id="*{'detallesSucursalModal'+{sucursal.idSucursal}}" tabindex="-1" aria-labelledby="detallesSucursalModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                            <div class="modal-header text-white" style="background-color: #17385f;">
+                            <h1 class="modal-title fs-5" id="detallesSucursalModalLabel">Detalles del Sucursal</h1>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container">
+                                    <div class="row">
+                                        <p class="card-text" th:text="'Folio: ' + ${sucursal.idSucursal}">Folio</p>
+                                        <p class="card-text" th:text="'Nombre Sucursal: ' + ${sucursal.nombre}">Folio</p>
+                                        <p class="card-text" th:text="'Dirección: ' + ${sucursal.calle} + ' ' + ${sucursal.numero} + ' ' + ${sucursal.colonia} + ' ' + ${sucursal.alcaldia} + ' ' + ${sucursal.estado} + ' ' + ${sucursal.codigoPostal}">Dirección</p>
+                                        <p class="card-text" th:text="'Persona de contacto: ' + ${sucursal.contacto}">Persona de contacto</p>
+                                        <p class="card-text" th:text="'Teléfono de Sucursal: ' + ${sucursal.telefono}">Teléfono de Sucursal</p>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <a type="button" th:href="@{/servicios/tablaServicios/{idSucursal} (idSucursal = ${sucursal.idSucursal})}" class="btn btn-primary btn-lg" style="background-color: #17385f;">Servicios</a>
+                                        </div>
+                                        <div class="col-4">   
+                                            <a type="button" href="" class="btn btn-primary btn-lg" style="background-color: #17385f;">Soportes</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a type="button" data-bs-toggle="modal" th:attr="data-bs-target='#editarSucursalModal'+*{sucursal.idSucursal}" >
+                        <i class="fa-solid fa-pen-to-square fa-2x text-secondary"></i>&nbsp;
+                    </a>
+                    <!-- Modal Modificar Seucursal -->
+                    <form th:action="@{/sucursales/actualizarSucursal}" method="post" class="row g-3 needs-validation" novalidate> 
+                        <div class="modal fade" data-bs-backdrop="static" th:id="*{'editarSucursalModal'+{sucursal.idSucursal}}" tabindex="-1" aria-labelledby="editarSucursalModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                            <div class="modal-header text-white" style="background-color: #17385f;">
+                                <h1 class="modal-title fs-5" id="editarSucursalModalLabel">Modificar Sucursal</h1>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container">
+                                    <div class="row espacioSuperior25pixeles" style="display:none">
+                                        <div class="col-2">
+                                            <label class="form-label">Id Sucursal</label>
+                                        </div>
+                                        <div class="col-10">
+                                            <input type="number" th:value="${sucursal.idSucursal}" name="idSucursal">
+                                        </div>
+                                    </div>
+                                    <div class="row espacioSuperior25pixeles">
+                                        <div class="col-2">
+                                            <label for="inputNombreSucursal" class="form-label">Nombre de Sucursal: </label>
+                                        </div>
+                                        <div class="col">
+                                            <input name="nombre" onkeyup="mayus(this);" type="text" th:value="*{sucursal.nombre}" id="inputNombreSucursal" class="form-control is-valid" aria-describedby="folioServicio" placeholder="EJ. SUCURSAL MIRAMONTES" required>
+                                            <div class="invalid-feedback">
+                                                Ingrese el nombre de la sucursal.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-2">
+                                            
+                                            <label for="inputCalle" class="form-label">Calle: </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" onkeyup="mayus(this);" name="calle" th:value="*{sucursal.calle}" id="inputCalle" class="form-control is-valid" aria-describedby="folioServicio" placeholder="EJ. XICO" required>
+                                            <div class="invalid-feedback">
+                                                Ingrese la calle.
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            
+                                            <label for="inputNumero" class="form-label">Número: </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="number" onkeyup="mayus(this);" name="numero" th:value="*{sucursal.numero}" id="inputNumero" class="form-control is-valid" aria-describedby="folioServicio" placeholder="EJ. 28" required>
+                                            <div class="invalid-feedback">
+                                                Ingrese el número.
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            
+                                            <label for="inputColonia" class="form-label">Colonia: </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" onkeyup="mayus(this);" name="colonia" th:value="*{sucursal.colonia}" id="inputColonia" class="form-control is-valid" aria-describedby="folioServicio" placeholder="EJ. MIRAVALLES" required>
+                                            <div class="invalid-feedback">
+                                                Ingrese la colonia.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-2">
+                                            
+                                            <label for="inputCodigoPostal" class="form-label">Código Postal: </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="number" onkeyup="mayus(this);" name="codigoPostal" th:value="*{sucursal.codigoPostal}" id="inputCodigoPostal" class="form-control is-valid" aria-describedby="folioServicio" placeholder="EJ. 09263" required>
+                                            <div class="invalid-feedback">
+                                                Ingrese el código postal.
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            
+                                            <label for="inputAlcaldia" class="form-label">Alcaldía: </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" onkeyup="mayus(this);" name="alcaldia" th:value="*{sucursal.alcaldia}" id="inputAlcaldia" class="form-control is-valid" aria-describedby="folioServicio" placeholder="EJ. XOCHIMILCO" required>
+                                            <div class="invalid-feedback">
+                                                Ingrese la alcandia.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-2">
+                                            
+                                            <label for="inputContacto" class="form-label">Contacto: </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" onkeyup="mayus(this);" name="contacto" th:value="*{sucursal.contacto}" id="inputContacto" class="form-control is-valid" aria-describedby="folioServicio" placeholder="EJ. INGRID ESTRADA ALTAMIRANO" required>
+                                            <div class="invalid-feedback">
+                                                Ingrese el nombre del contacto.
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            
+                                            <label for="inputTelefono" class="form-label">Teléfono: </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="tel" onkeyup="mayus(this);" name="telefono" th:value="*{sucursal.telefono}" id="inputTelefono" class="form-control is-valid" aria-describedby="folioServicio" placeholder="EJ. 01 800 789 632" required>
+                                            <div class="invalid-feedback">
+                                                Ingrese el Teléfono.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <label for="inputEstado" class="form-label">Estado: </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" onkeyup="mayus(this);" name="estado" th:value="*{sucursal.estado}" id="inputestado" class="form-control is-valid" aria-describedby="folioServicio" placeholder="EJ. CDMX" required>
+                                            <div class="invalid-feedback">
+                                                Ingrese el Estado.
+                                            </div>
+                                        </div>
+                                        <div class="col-2">
+                                            <label for="inputCorreo" class="form-label">Correo Electrónico: </label>
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" onkeyup="mayus(this);" name="correo" th:value="*{sucursal.correo}" id="inputCorreo" class="form-control is-valid" aria-describedby="folioServicio" placeholder="EJ. MIRAMONTES@VENTAS.COM.MX" required>
+                                            <div class="invalid-feedback">
+                                                Ingrese el correo electrónico.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div class="modal-footer espacioSuperior25pixeles">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Salir</button>
+                                <button type="submit" class="btn text-white" style="background-color:  #283968 ;">Guardar</button>
+                            </div>
+                            </div>
+                            </div>
+                        </div>
+                    </form> 
+                </td>
+            </tr>
+            </tbody>    
+        </table>
+    </div>
+
+    <footer th:insert="fragments/footer::footer" class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top"></footer>
+    
+    <script
+      src="https://kit.fontawesome.com/cab137a5a8.js"
+      crossorigin="anonymous" ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <!-- JavaScript Bundle with Popper -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      crossorigin="anonymous"></script>
+
+    <script th:src="@{/javascript/Scripts.js}"></script>
+    <script th:src="@{/javascript/ScriptValidaciones.js}"></script>
+
+</body>
+</html>

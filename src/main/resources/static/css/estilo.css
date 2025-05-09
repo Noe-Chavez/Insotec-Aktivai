@@ -1,0 +1,57 @@
+h1  {
+    text-align: center;
+    padding: 15px;
+}
+
+#search-box {
+    padding: 25px;
+}
+
+#text_footer {
+    text-align: center;
+}
+
+#button_create {
+    margin-bottom: 25px;
+}
+
+.espacioInferior25pixeles {
+    margin-bottom: 25px;
+}
+
+.espacioSuperior25pixeles {
+    margin-top: 25px;
+}
+
+#imageAvatar {
+    height: 100px;
+    width: 100px;
+}
+
+.imageAvatarDetalles {
+    margin-bottom: 15px;
+}
+
+#centrarTexto {
+    text-align: center;
+}
+
+.mandarAIzquierda {
+    text-align: left;
+}
+
+.textareaNoRedimencion {
+    border-radius: 4px;
+    overflow: hidden;
+    max-lines: 50;;
+    resize: none;
+    overflow: auto;
+}
+
+#indicadorActivoGreen {
+    color: green;
+}
+
+#indicadorInactivoRed {
+    color: red;
+}
